@@ -5,6 +5,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ricardo
       MONGO_INITDB_ROOT_PASSWORD: testpass
+    container_name: mongoscrap
     ports:
       - "27017:27017"
     networks:
@@ -34,7 +35,7 @@ services:
       - mongo
     volumes:
       - .:/app
-    command: npm run dev
+    command: npm run start
     networks:
       - my-network
 

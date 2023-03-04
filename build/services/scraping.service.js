@@ -8,23 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const scraping_controller_1 = require("./controllers/scraping.controller");
-const app = (0, express_1.default)();
-const PORT = 3000;
-app.use(express_1.default.json());
-app.get('/test', (_req, res) => {
-    console.log('Testing---');
-    res.send('test');
-});
-app.get('/scrap', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Scraping---');
-    (0, scraping_controller_1.scraping)(_req, res);
-}));
-app.listen(PORT, () => {
-    console.log('Running on port ' + PORT);
-});
+exports.scrapandStore = void 0;
+const dbCrud_1 = require("../database/dbCrud");
+const scrapingFunctions_1 = require("../lib/scrapingFunctions");
+function scrapandStore() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const elMundo = yield (0, scrapingFunctions_1.scrapHeadlines)('https://www.elmundotoday.com/', 'h3.entry-title a');
+        (0, dbCrud_1.storeDB)(elMundo, 'https://www.elmundotoday.com/');
+        const elPais = yield (0, scrapingFunctions_1.scrapHeadlines)('https://elpais.com/', 'h2.c_t a');
+        (0, dbCrud_1.storeDB)(elPais, 'https://elpais.com/');
+        return [...elMundo, ...elPais];
+    });
+}
+exports.scrapandStore = scrapandStore;

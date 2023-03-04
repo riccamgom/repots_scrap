@@ -1,6 +1,5 @@
 import express from 'express';
-import { scrapandStore } from './services/scraping';
-import { apiResponseUtil } from './res/apiresponse';
+import { scraping } from './controllers/scraping.controller';
 
 const app = express();
 const PORT = 3000;
@@ -14,13 +13,7 @@ app.get('/test', (_req, res) => {
 
 app.get('/scrap', async (_req, res) => {
     console.log('Scraping---');
-    try {
-        const headlines = await scrapandStore();
-        res.status(200).json(apiResponseUtil.success(headlines));
-    } catch (error) {
-        console.error(error);
-        res.status(500).json(apiResponseUtil.error('Internal server Error'));
-    }
+    scraping(_req, res);
 });
 
 app.listen(PORT, () => {

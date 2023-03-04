@@ -8,23 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const scraping_controller_1 = require("./controllers/scraping.controller");
-const app = (0, express_1.default)();
-const PORT = 3000;
-app.use(express_1.default.json());
-app.get('/test', (_req, res) => {
-    console.log('Testing---');
-    res.send('test');
-});
-app.get('/scrap', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Scraping---');
-    (0, scraping_controller_1.scraping)(_req, res);
-}));
-app.listen(PORT, () => {
-    console.log('Running on port ' + PORT);
-});
+exports.scraping = void 0;
+const scraping_service_1 = require("../services/scraping.service");
+const apiresponse_1 = require("../res/apiresponse");
+function scraping(_req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const headlines = yield (0, scraping_service_1.scrapandStore)();
+            res.status(200).json(apiresponse_1.apiResponseUtil.success(headlines));
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json(apiresponse_1.apiResponseUtil.error('Internal server Error'));
+        }
+    });
+}
+exports.scraping = scraping;

@@ -4,7 +4,7 @@ import { Headline } from "../database/models/headline";
 
 export const appDataSource = new DataSource({
     type: "mongodb",
-    host: "localhost",
+    host: "mongoscrap",
     port: 27017,
     username: 'ricardo',
     password: 'testpass',
@@ -16,4 +16,4 @@ export const appDataSource = new DataSource({
 
 appDataSource.initialize().then(() => {
     // Start DB
-}).catch((error) => console.log(error));
+}).catch((error) => console.log("Error de conexion", error));
