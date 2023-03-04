@@ -1,9 +1,19 @@
-import { DataSource } from "typeorm"
+import "reflect-metadata";
+import { DataSource } from "typeorm";
+import { Headline } from "../database/models/headline";
 
-export const myDataSource = new DataSource({
+export const appDataSource = new DataSource({
     type: "mongodb",
     host: "localhost",
     port: 27017,
-    database: "scraper",
-})
+    username: 'ricardo',
+    password: 'testpass',
+    database: "scrapingdata",
+    authSource: "admin",
+    entities: [Headline],
+    useUnifiedTopology: true
+});
 
+appDataSource.initialize().then(() => {
+    // Start DB
+}).catch((error) => console.log(error));

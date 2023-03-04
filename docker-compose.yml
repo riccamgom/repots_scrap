@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ricardo
+      MONGO_INITDB_ROOT_PASSWORD: testpass
+    ports:
+      - "27017:27017"
+    networks:
+      - my-network
+  
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ricardo
+      ME_CONFIG_MONGODB_ADMINPASSWORD: testpass
+      ME_CONFIG_MONGODB_URL: mongodb://ricardo:testpass@mongo:27017/
+    networks:
+      - my-network
+  
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: scrap-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    command: npm run dev
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
